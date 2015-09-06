@@ -1,0 +1,273 @@
+# vim:filetype=i3
+
+
+### i3-colors
+## unfinished/placeholder colors!
+
+#name                   #top    #border #text
+client.focused          #402e2e #978965 #402e2e #978965
+client.unfocused        #402e2e #402e2e #978965 #402e2e
+client.focused_inactive #402e2e #402e2e #978965 #402e2e
+client.urgent           #402e2e #402e2e #978965 #402e2e
+
+
+### Init i3bar and set colors
+bar {
+  output HDMI1
+  status_command i3status -c ~/.i3/i3status.conf
+  strip_workspace_numbers yes
+
+  colors {
+	    statusline  #978965
+	    background  #1f1f1f
+
+      #name              #border #bg     #text
+	    focused_workspace  #978965 #402e2e #978965
+	    active_workspace   #402e2e #402e2e #978965
+	    inactive_workspace #402e2e #402e2e #978965
+	    urgent_workspace   #402e2e #402e2e #978965
+  }
+}
+bar {
+  output eDP1
+  status_command i3status -c ~/.i3/i3status.conf
+  strip_workspace_numbers yes
+
+  colors {
+	    statusline  #978965
+	    background  #1f1f1f
+
+      #name              #border #bg     #text
+	    focused_workspace  #978965 #402e2e #978965
+	    active_workspace   #402e2e #402e2e #978965
+	    inactive_workspace #402e2e #402e2e #978965
+	    urgent_workspace   #402e2e #402e2e #978965
+  }
+}
+bar {
+  output VGA1
+  status_command i3status -c ~/.i3/i3status.conf
+  strip_workspace_numbers yes
+
+  colors {
+	    statusline  #978965
+	    background  #1f1f1f
+
+      #name              #border #bg     #text
+	    focused_workspace  #978965 #402e2e #978965
+	    active_workspace   #402e2e #402e2e #978965
+	    inactive_workspace #402e2e #402e2e #978965
+	    urgent_workspace   #402e2e #402e2e #978965
+  }
+}
+
+### Floating Windows
+for_window [class="URxvt"] floating enable
+for_window [title="deluge"] floating enable
+for_window [title="pavucontrol"] floating enable
+for_window [title="Deluge"] floating enable
+for_window [title="feh"] floating enable
+for_window [title="evince"] floating enable
+
+
+### Borderless Windows
+for_window [class="Firefox"] border none
+for_window [class="Firefox-Nightly"] border none
+for_window [class="Chromium"] border none
+### 1pixel border Windows
+for_window [class="URxvt"] border 1pixel
+for_window [class="feh"] border 1pixel
+for_window [class="mpv"] border 1pixel
+for_window [class="Zathura"] border 1pixel
+
+
+### Modkey
+set $mod Mod4
+
+
+### Font
+font -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+
+
+### Windowtype
+# none = no border, normal = default i3, 1pixel = 1pixel border
+for_window [class="^.*"] border pixel 0
+bindsym $mod+Shift+x border none
+bindsym $mod+Shift+n border normal
+bindsym $mod+Shift+o border 1pixel
+
+### Gaps
+
+gaps inner 10
+gaps outer 10
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+### Keybind to move floating windows with the mouse cursor while holding
+floating_modifier $mod
+
+
+### urxvt keybind
+bindsym $mod+Return exec --no-startup-id urxvt
+
+
+### Kill window
+bindsym $mod+Shift+q kill
+
+
+### dmenu keybind
+bindsym $mod+d exec --no-startup-id j4-dmenu-desktop
+
+
+### Scrot screenshot
+bindsym $mod+Shift+s exec "screencap && upload /tmp/scrot.png | grep teknik | cut -d ' ' -f 12 > /tmp/img-url && xdg-open $(tail -n 1 /tmp/img-url)
+
+
+### Change window focus with arrow keys
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+### Shrink/Grow Windows by 10px
+bindsym $mod+Control+h resize grow width 5 px or 5 ppt
+bindsym $mod+Control+j resize grow height 5 px or 5 ppt
+bindsym $mod+Control+k resize shrink height 5 px or 5 ppt
+bindsym $mod+Control+l resize shrink width 5 px or 5 ppt
+
+
+### Move focused window with arrow keys
+# mod+Shift+Arrows for short movements and mod+Control+Arrows for longer movements
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+h move left
+bindsym $mod+Control+Left exec "i3-msg move left"
+bindsym $mod+Control+Down exec "i3-msg move down"
+bindsym $mod+Control+Up exec "i3-msg move up"
+bindsym $mod+Control+Right exec "i3-msg move right"
+
+
+### Change window split into horizontal
+bindsym $mod+Right split h
+bindsym $mod+Left split h
+
+
+### Change window split into vertical
+bindsym $mod+Down split v
+bindsym $mod+Up split v
+
+
+### Fullscreen mode for focused window
+bindsym $mod+f fullscreen
+
+
+### Jump to urgent window
+bindsym $mod+u [urgent=latest] focus
+
+
+### Toggle tiling/floating mode
+bindsym $mod+Shift+space floating toggle
+
+
+### Toggle focus between tiling/floating windows
+bindsym $mod+space focus mode_toggle
+
+
+### Reload i3-config (~/.i3/config)
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+c reload
+
+
+### Exit i3
+bindsym $mod+Shift+e exec "i3-msg exit"
+
+
+### Lock i3
+bindsym $mod+Ctrl+c exec "~/bin/lock.sh"
+
+### MPC Controls
+bindsym $mod+p exec "mpc pause"
+bindsym $mod+r exec "mpc play"
+
+
+### Increase/Decrease Brightness
+bindsym XF86MonBrightnessUp exec "xbacklight -inc 10"
+bindsym XF86MonBrightnessDown exec "xbacklight -dec 10"
+### Workspace variables - change the workspace labels here!
+set $WS0 I
+set $WS2 II
+set $WS3 III
+set $WS4 IV
+set $WS5 V
+set $WS6 VI
+set $WS7 VII
+set $WS8 VIII
+set $WS9 IX
+set $WS10 X
+
+
+### Switch workspaces
+bindsym $mod+1 workspace $WS0
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+6 workspace $WS6
+bindsym $mod+7 workspace $WS7
+bindsym $mod+8 workspace $WS8
+bindsym $mod+9 workspace $WS9
+bindsym $mod+0 workspace $WS10
+
+bindsym $mod+n workspace next
+bindsym $mod+b workspace prev
+
+### Scratchpad
+bindsym $mod+Ctrl+s move scratchpad
+bindsym $mod+s workspace back_and_forth
+
+### Send focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $WS0
+bindsym $mod+Shift+2 move container to workspace $WS2
+bindsym $mod+Shift+3 move container to workspace $WS3
+bindsym $mod+Shift+4 move container to workspace $WS4
+bindsym $mod+Shift+5 move container to workspace $WS5
+bindsym $mod+Shift+6 move container to workspace $WS6
+bindsym $mod+Shift+7 move container to workspace $WS7
+bindsym $mod+Shift+8 move container to workspace $WS8
+bindsym $mod+Shift+9 move container to workspace $WS9
+bindsym $mod+Shift+0 move container to workspace $WS10
