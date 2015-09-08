@@ -116,3 +116,5 @@ export GOMAXPROCS=8
 export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 export QT_IM_MODULE=ibus
+export LIBVA_DRIVER_NAME=vdpau
+export DRI_PRIME=1

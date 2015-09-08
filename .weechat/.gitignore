@@ -1,0 +1,6 @@
+irc.conf
+logs
+*fifo
+weechat.log
+*temp*
+url_serverlist.txt
