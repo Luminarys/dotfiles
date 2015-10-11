@@ -86,7 +86,7 @@ set $mod Mod4
 
 
 ### Font
-font -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+font xft:Inconsolata:size=9:antialias=true:hinting=true
 
 
 ### Windowtype
@@ -153,8 +153,9 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec --no-startup-id j4-dmenu-desktop
 
 
-### Scrot screenshot
-bindsym $mod+Shift+s exec "screencap && upload /tmp/scrot.png | grep teknik | cut -d ' ' -f 12 > /tmp/img-url && xdg-open $(tail -n 1 /tmp/img-url)
+### maim screenshot
+bindsym $mod+Shift+s exec "fullscreenshot"
+bindsym $mod+Shift+w exec "cwscreenshot"
 
 
 ### Change window focus with arrow keys

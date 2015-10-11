@@ -54,7 +54,8 @@
 
 ! urxvt
 URxvt*cursorBlink: 		true
-URxvt*font:				-*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+#URxvt*font:				-*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+urxvt*font:             xft:Inconsolata:size=9:antialias=true:hinting=true
 URxvt*scrollBar: 		false
 URxvt.perl-ext-common: default,clipboard
 xvt.iso14755: False

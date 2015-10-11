@@ -3,4 +3,4 @@ logs
 *fifo
 weechat.log
 *temp*
-url_serverlist.txt
+urlserver_list.txt

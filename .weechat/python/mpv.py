@@ -13,29 +13,39 @@ def get_mpv_info():
 	for i in ['filename', 'media-title', 'playback-time', 'length']:
 		req = '{"command": ["get_property", "%s"]}\n' %i
 		client.send(req)
-		res[i] = json.loads(client.recv(1024))['data']
+                try:
+		    res[i] = json.loads(client.recv(1024))['data']
+                except:
+                    res[i] = "N/A"
 		
 	client.close()
 	return res
 	
-def parse_info():
+def parse_info(use_time = True):
 	np = get_mpv_info()
 	filename = np['filename'].replace('_', ' ')
 	title = np['media-title'].replace('_', ' ')
         progress = time.strftime("%H:%M:%S",time.gmtime(np['playback-time']))
-        duration = time.strftime("%H:%M:%S", time.gmtime(np['length']))
-	percent = int((np['playback-time']/np['length']) * 100)
-       
-	bar_prog = int(round((np['playback-time']/np['length'])*15, 1))
-	bar = '['+'>'*bar_prog+'-'*(15-bar_prog)+']'
-	return filename, title, progress, duration, percent, bar
+        if use_time:
+            duration = time.strftime("%H:%M:%S", time.gmtime(np['length']))
+	    return filename, title, progress, duration
+        else:
+	    return filename, title, progress
  
 def mpv_np(data, buffer, args):
-	filename, title, progress, duration, percent, bar = parse_info()
+	filename, title, progress, duration = parse_info()
         color = "01,01"
-        op = "/me nw %s{} %s{}/{}" % ("11", "09")
+        op = "/me nw: %s{} %s{}/{}" % ("11", "09")
 	weechat.command(weechat.current_buffer(), 
 	    op.format(filename, progress, duration))
+	return weechat.WEECHAT_RC_OK
+
+def mpvs_np(data, buffer, args):
+	filename, title, progress = parse_info(False)
+        color = "01,01"
+        op = "/me np: %s{}%s for %s{}" % ("11", "", "09")
+	weechat.command(weechat.current_buffer(), 
+	    op.format(filename, progress))
 	return weechat.WEECHAT_RC_OK
  
 def mpv_np_title(data, buffer, args):
@@ -47,4 +57,6 @@ def mpv_np_title(data, buffer, args):
 weechat.register("weechat-np-mpv", "Bodzioslaw aka pwg", "0.1", "LGPL", "Now playing for mpv", "", "")
 
 hook = weechat.hook_command("mpv", "Now playing mpv", "", "", "", "mpv_np", "")
+# For radio streams
+hook = weechat.hook_command("mpvs", "Now playing mpv", "", "", "", "mpvs_np", "")
 hook = weechat.hook_command("mpv-title", "Now playing mpv with tittle", "", "", "", "mpv_np_title", "")

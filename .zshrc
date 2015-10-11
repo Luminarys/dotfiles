@@ -101,8 +101,9 @@ alias mpd-update='mpc update Music'
 alias msync='rsync -P -a eumen@rt.luminarys.com:/media/500g/Music/ ~/Music/ && mpd-update'
 alias viz='cava -i fifo -p /tmp/mpd.fifo'
 alias tfortune='shuf -n 1 ~/Scripts/theo-quotes'
-alias nsm='xrandr --output eDP1 --off --output VGA1 --left-of HDMI1'
-alias sm='xrandr --output eDP1 --left-of VGA1 --output VGA1 --left-of HDMI1'
+alias nsm='xrandr --output eDP1 --off --output VGA1 --auto --left-of HDMI1 --output HDMI1 --auto && feh --bg-center ~/Pictures/Wallpaper/cirno-flat.png'
+alias sm='xrandr --output eDP1 --auto --left-of VGA1 --output VGA1 --auto --left-of HDMI1 --output HDMI1 --auto'
+alias radio='mpv http://radio.stew.moe/stream/stream192.mp3'
 #alias tmux="TERM=screen-256color-bce tmux -2"
 TERM=xterm-256color
 
