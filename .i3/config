@@ -64,9 +64,9 @@ bar {
 ### Floating Windows
 for_window [class="URxvt"] floating enable
 for_window [title="deluge"] floating enable
-for_window [title="pavucontrol"] floating enable
-for_window [title="Deluge"] floating enable
-for_window [title="feh"] floating enable
+for_window [class="pavucontrol"] floating enable
+for_window [class="deluge"] floating enable
+for_window [class="feh"] floating enable
 for_window [title="evince"] floating enable
 
 
@@ -98,8 +98,8 @@ bindsym $mod+Shift+o border 1pixel
 
 ### Gaps
 
-gaps inner 10
-gaps outer 10
+gaps inner 5
+gaps outer 0
 set $mode_gaps Gaps: (o) outer, (i) inner
 set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
 set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
