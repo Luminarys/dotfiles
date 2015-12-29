@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+
+~/.config/lemonbar/bar.py HDMI1 \
+    | lemonbar \
+        -a 20 \
+        -f "Inconsolata:size=13" \
+        -f "Material\-Design\-Iconic\-Font:style=Design-Iconic-Font:size=12" \
+        -f "Material Design Icons:size=12" \
+        -f "Inconsolata:size=12" \
+        -F "#FFFFFFFF" \
+        -B "#882F343F" \
+        -g 1920x20 | zsh &
+
+~/.config/lemonbar/bar.py VGA1 \
+    | lemonbar \
+        -a 20 \
+        -f "Inconsolata:size=13" \
+        -f "Material\-Design\-Iconic\-Font:style=Design-Iconic-Font:size=12" \
+        -f "Material Design Icons:size=12" \
+        -f "Inconsolata:size=13" \
+        -F "#FFFFFFFF" \
+        -B "#882F343F" \
+        -g 1920x20+1920 | zsh
+
+wait
