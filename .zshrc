@@ -49,7 +49,7 @@ plugins=(git zsh-syntax-highlighting)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl/:/home/luminarys/Scripts:/home/luminarys/Programming/Go/bin/"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl/:/home/luminarys/Scripts:/home/luminarys/Programming/Go/bin/:/home/luminarys/.cargo/bin/:/home/luminarys/.gem/ruby/2.4.0/bin/"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -82,11 +82,11 @@ export EDITOR='vim'
 alias update="sudo pacman -Syu && yaourt -Syua"
 alias pstall="sudo pacman -S"
 alias astall="makepkg -s && sudo pacman -U *.xz"
+alias vim="nvim"
 alias terminal="gnome-terminal"
 alias shutdown="sudo shutdown 0"
 alias open="xdg-open"
 alias login-to-homeserv="ssh luminarys@luminarys.com -i ~/.ssh/HomeServ"
-alias gcc="gcc -pedantic"
 alias fcow="fortune | cowsay"
 alias dm="sh /home/luminarys/Scripts/DM.sh"
 alias ranger='python /usr/bin/ranger'
@@ -98,26 +98,40 @@ alias gpu='git push upstream master'
 alias vpn='sudo openvpn /etc/openvpn/pia/US_Midwest.ovpn'
 alias gac='git add . && git commit -m'
 alias mpd-update='mpc update Music'
-alias msync='rsync -P -a eumen@rt.luminarys.com:/media/500g/Music/ ~/Music/ && mpd-update'
+alias msync='rsync -aP rtn.luminarys.com:/data-store/.rtorrent/music/ /home/luminarys/Music && mpd-update'
 alias viz='cava -i fifo -p /tmp/mpd.fifo'
 alias tfortune='shuf -n 1 ~/Scripts/theo-quotes'
 alias nsm='xrandr --output eDP1 --off --output VGA1 --auto --left-of HDMI1 --output HDMI1 --auto && feh --bg-center ~/Pictures/Wallpaper/cirno-flat.png'
 alias sm='xrandr --output eDP1 --auto --left-of VGA1 --output VGA1 --auto --left-of HDMI1 --output HDMI1 --auto'
-alias radio='mpv http://radio.stew.moe/stream/stream192.mp3\?user=Luminarys'
+alias radio='mpv --profile audio http://radio.stew.moe/stream/stream256.opus\?user=Luminarys'
+alias pmd='/home/luminarys/local/src/pmd-bin-5.8.1/bin/run.sh'
 #alias tmux="TERM=screen-256color-bce tmux -2"
 TERM=xterm-256color
 
-export PATH=/home/luminarys/torch/install/bin:$PATH  # Added automatically by torch-dist
-export LD_LIBRARY_PATH=/home/luminarys/torch/install/lib:/usr/local/lib/:$LD_LIBRARY_PATH  # Added automatically by torch-dist
-export DYLD_LIBRARY_PATH=/home/luminarys/torch/install/lib:$DYLD_LIBRARY_PATH  # Added automatically by torch-dist
+export LD_LIBRARY_PATH=/home/luminarys/local/lib:/home/luminarys/local/lib64:/usr/local/lib/:$LD_LIBRARY_PATH
 export GOPATH=/home/luminarys/Programming/Go
 export GOBIN=/home/luminarys/Programming/Go/bin
 export GOMAXPROCS=8
 #export GTK_THEME=Adwaita
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
 export LIBVA_DRIVER_NAME=vdpau
 export DRI_PRIME=1
 export PATH=~/.cabal/bin/:$PATH
 export PATH=~/Installs/Elm/Elm-Platform/0.15.1/.cabal-sandbox/bin:$PATH
+export PATH=~/local/bin/:$PATH
+export RUST_SRC_PATH=/home/luminarys/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
+export RUST_BACKTRACE=1
+export CARGO_INCREMENTAL=1
+export LIBVA_DRIVER_NAME=radeonsi
+export ANDROID_HOME=~/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export QEMU_AUDIO_DRV=pa
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+set -o vi
+
+# added by travis gem
+[ -f /home/luminarys/.travis/travis.sh ] && source /home/luminarys/.travis/travis.sh

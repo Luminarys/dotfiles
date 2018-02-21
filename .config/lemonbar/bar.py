@@ -4,17 +4,13 @@ import time
 import sys
 import asyncio
 import subprocess
+import copy
+import re
 
 import i3ipc
 import psutil
-from mpd import MPDClient
 
-def run_async(fn, args, vals):
-    future = asyncio.Future()
-    args.insert(0, future)
-    args.insert(1, vals)
-    asyncio.ensure_future(fn(*args))
-    future.add_done_callback(lambda fut: print_bar(fut, vals))
+interface = "enp0s31f6"
 
 def get_bytes(num, suffix='/s', lpad=3):
     for unit in ['Bit','KiB','MiB','GiB','TiB','PiB','EiB','ZiB']:
@@ -54,38 +50,45 @@ def get_package_updates():
     output = subprocess.Popen("pacman -Qu | wc -l", shell=True, stdout=subprocess.PIPE).communicate()[0]
     num = output.decode("ascii").rstrip()
     if num != "0":
-        return "%{A:urxvt -e sudo pacman -Syyu:}%{T2}\uf220 %{T1}" + num + "%{T1}%{A}"
+        return "%{A:urxvt -e sudo pacman -Syyu:}%{T2}\uf0ee %{T1}" + num + "%{T1}%{A}"
     else:
-        return ""
+        return "\uf05d"
 
 def get_net_transfer(prev):
-    output = subprocess.Popen("cat /sys/class/net/wlp4s0/statistics/rx_bytes", shell=True, stdout=subprocess.PIPE).communicate()[0]
+    output = subprocess.Popen("cat /sys/class/net/" + interface + "/statistics/rx_bytes", shell=True, stdout=subprocess.PIPE).communicate()[0]
     num = int(output.decode("ascii").rstrip())
     readable_num = get_bytes(num - prev)
-    return "\uf30c " + readable_num, num
+    return "\uf0ec " + readable_num, num
 
 def get_cpu_usage():
-    return "\uf3ec " + str(psutil.cpu_percent()).rjust(4, '0') + "%"
+    return "\uf110 " + str(psutil.cpu_percent()).rjust(4, '0') + "%"
 
 def get_ram_usage():
-    return "\uf3e0 " + get_bytes(psutil.virtual_memory().active, suffix="", lpad=1)
+    return "\uf2db " + get_bytes(psutil.virtual_memory().active, suffix="", lpad=1)
 
 def get_ip_addr():
-    return "%{A:connman-gtk:}\uf2c1 " + psutil.net_if_addrs()["wlp4s0"][0].address + "%{A}"
+    main_ip_addr = psutil.net_if_addrs()[interface][0].address
+    if re.match('(?:[0-9]{1,3}\.){3}[0-9]{1,3}', main_ip_addr):
+        return "%{A:connman-gtk --no-icon:}\uf0e8 " + main_ip_addr + "%{A}"
+    else:
+        return "%{A:connman-gtk --no-icon:}\uf0e8 None%{A}"
 
 def get_mpd_info():
-    client = MPDClient()
-    client.connect("localhost", 6600)
-    np = client.currentsong()
-    pause = "%{A:mpc pause:} \uf3a7 %{A}"
-    play = "%{A:mpc play:} \uf3aa %{A}"
-    if "name" in np:
-        return np["name"] + " " + pause + play
-    else:
-        return np["title"] + " " + pause + play
+    # client = MPDClient()
+    # client.connect("localhost", 6600)
+    # np = client.currentsong()
+    # pause = "%{A:mpc pause:} \uf3a7 %{A}"
+    # play = "%{A:mpc play:} \uf3aa %{A}"
+    # if "name" in np:
+    #     return np["name"] + " " + pause + play
+    # elif "title" in np:
+    #     return np["title"] + " " + pause + play
+    # else:
+    #     return "\uf3bb"
+    return "\uf3bb"
 
 def get_langs():
-    output = subprocess.Popen("ibus engine", shell=True, stdout=subprocess.PIPE).communicate()[0]
+    output = subprocess.Popen(["ibus", "engine"], stdout=subprocess.PIPE).communicate()[0]
     c_lang = output.decode("ascii").rstrip()
     if c_lang == "xkb:us::eng":
         return "%{A:ibus engine libpinyin:}EN%{A}"
@@ -94,81 +97,18 @@ def get_langs():
     elif c_lang == "anthy":
         return "%{A:ibus engine xkb\:us\:\:eng:}JP%{A}"
 
-@asyncio.coroutine
-def async_date(future, vals):
-    yield from asyncio.sleep(10)
-    future.set_result({"date": get_date()})
-    run_async(async_date, [], vals)
-
-@asyncio.coroutine
-def async_time(future, vals):
-    yield from asyncio.sleep(1)
-    future.set_result({"time": get_time()})
-    run_async(async_time, [], vals)
-
-@asyncio.coroutine
-def async_workspaces(future, vals, i3):
-    yield from asyncio.sleep(0.3)
-    future.set_result({"workspaces": get_workspaces(i3, vals)})
-    run_async(async_workspaces, [i3], vals)
-
-@asyncio.coroutine
-def async_package_updates(future, vals):
-    yield from asyncio.sleep(600)
-    future.set_result({"workspaces": get_package_updates()})
-    run_async(async_package_updates, [], vals)
-
-@asyncio.coroutine
-def async_network_transfer(future, vals, prev_rx):
-    yield from asyncio.sleep(1)
-    disp, new_prev = get_net_transfer(prev_rx)
-    future.set_result({"net_transfer": disp})
-    run_async(async_network_transfer, [new_prev], vals)
-
-@asyncio.coroutine
-def async_cpu_usage(future, vals):
-    yield from asyncio.sleep(1)
-    future.set_result({"cpu_usage": get_cpu_usage()})
-    run_async(async_cpu_usage, [], vals)
-
-@asyncio.coroutine
-def async_ram_usage(future, vals):
-    yield from asyncio.sleep(5)
-    future.set_result({"ram_usage": get_ram_usage()})
-    run_async(async_ram_usage, [], vals)
-
-@asyncio.coroutine
-def async_ip_addr(future, vals):
-    yield from asyncio.sleep(5)
-    future.set_result({"ip_addr": get_ip_addr()})
-    run_async(async_ip_addr, [], vals)
-
-@asyncio.coroutine
-def async_mpd_info(future, vals):
-    yield from asyncio.sleep(5)
-    future.set_result({"mpd_info": get_mpd_info()})
-    run_async(async_mpd_info, [], vals)
-
-@asyncio.coroutine
-def async_langs(future, vals):
-    yield from asyncio.sleep(2)
-    future.set_result({"langs": get_langs()})
-    run_async(async_langs, [], vals)
-
-def print_bar(future, vals):
-    vals.update(future.result())
-    print(output.format(**vals))
-    try:
-        sys.stdout.flush()
-    except BrokenPipeError:
-        loop.stop()
-
-i3 = i3ipc.Connection()
-loop = asyncio.get_event_loop()
-
-bytes_output = subprocess.Popen("cat /sys/class/net/wlp4s0/statistics/rx_bytes", shell=True, stdout=subprocess.PIPE).communicate()[0]
-init_num_bytes = int(bytes_output.decode("ascii").rstrip())
-transfer_disp, rx_bytes = get_net_transfer(init_num_bytes)
+def get_power():
+    with open("/sys/class/power_supply/BAT1/charge_now") as fin:
+        current_power = int(fin.readline())
+    with open("/sys/class/power_supply/BAT1/charge_full") as fin:
+        total_power = int(fin.readline())
+    percent = 100 * current_power/total_power
+    if percent == 100:
+        return "\uf114"
+    elif percent > 25:
+        return "\uf116 {0:.1f}%".format(percent)
+    else:
+        return "\uf113 {0:.1f}%".format(percent)
 
 vals = {
     "left": "%{l}",
@@ -185,33 +125,102 @@ vals = {
     "font_2": "%{T2}",
     "font_3": "%{T3}",
     "font_4": "%{T4}",
-
-    "date": get_date(),
-    "time": get_time(),
-    "updates": get_package_updates(),
-    "net_transfer": transfer_disp,
-    "cpu_usage": get_cpu_usage(),
-    "ram_usage": get_ram_usage(),
-    "ip_addr": get_ip_addr(),
-    "mpd_info": get_mpd_info(),
-    "langs": get_langs(),
     }
 
-vals["workspaces"] = get_workspaces(i3, vals)
+class async_module(object):
+    def __init__(self, interval, args = []):
+        self.interval = interval
+        self.args = args
+        self._loop = asyncio.get_event_loop()
 
-output = "{left} {date} - {time} {center} {workspaces} {mpd_info} {right} {cpu_usage}{pad}{ram_usage}{pad}{net_transfer}{pad}{ip_addr}{pad}{updates}{pad}{langs} {f_clear}"
-print(output.format(**vals))
-sys.stdout.flush()
+    def _set(self):
+        future = asyncio.Future()
+        self.args.insert(0, future)
+        self.args.insert(1, vals)
+        future.add_done_callback(lambda fut: print_bar(fut, vals))
+        self._handler = self._loop.call_later(self.interval, self._run)
 
-run_async(async_date, [], vals)
-run_async(async_time, [], vals)
-run_async(async_workspaces, [i3], vals)
-run_async(async_package_updates, [], vals)
-run_async(async_network_transfer, [rx_bytes], vals)
-run_async(async_cpu_usage, [], vals)
-run_async(async_ram_usage, [], vals)
-run_async(async_ip_addr, [], vals)
-run_async(async_mpd_info, [], vals)
-run_async(async_langs, [], vals)
+    def _run(self):
+        self.args = self.fn(*self.args)
+        self._set()
 
+    def __call__(self, fn):
+        self.fn = fn
+        future = asyncio.Future()
+        self.args.insert(0, future)
+        self.args.insert(1, vals)
+        future.add_done_callback(lambda fut: set_val(fut, vals))
+        self.args = fn(*self.args)
+        self._set()
+
+@async_module(10, [])
+def async_date(future, vals):
+    future.set_result({"date": get_date()})
+    return []
+
+@async_module(1, [])
+def async_time(future, vals):
+    future.set_result({"time": get_time()})
+    return []
+
+i3 = i3ipc.Connection()
+
+@async_module(.3, [i3])
+def async_workspaces(future, vals, i3):
+    future.set_result({"workspaces": get_workspaces(i3, vals)})
+    return [i3]
+
+@async_module(600, [])
+def async_package_updates(future, vals):
+    future.set_result({"updates": get_package_updates()})
+    return []
+
+bytes_output = subprocess.Popen(["cat", "/sys/class/net/" + interface + "/statistics/rx_bytes"], stdout=subprocess.PIPE).communicate()[0]
+init_num_bytes = int(bytes_output.decode("ascii").rstrip())
+_transfer_disp, rx_bytes = get_net_transfer(init_num_bytes)
+
+@async_module(1, [rx_bytes])
+def async_network_transfer(future, vals, prev_rx):
+    disp, new_prev = get_net_transfer(prev_rx)
+    future.set_result({"net_transfer": disp})
+    return [new_prev]
+
+@async_module(1, [])
+def async_cpu_usage(future, vals):
+    future.set_result({"cpu_usage": get_cpu_usage()})
+    return []
+
+@async_module(5, [])
+def async_ram_usage(future, vals):
+    future.set_result({"ram_usage": get_ram_usage()})
+    return []
+
+@async_module(5, [])
+def async_ip_addr(future, vals):
+    future.set_result({"ip_addr": get_ip_addr()})
+    return []
+
+@async_module(5, [])
+def async_mpd_info(future, vals):
+    future.set_result({"mpd_info": get_mpd_info()})
+    return []
+
+# @async_module(2, [])
+# def async_langs(future, vals):
+#     future.set_result({"langs": get_langs()})
+#     return []
+
+def set_val(future, vals):
+    vals.update(future.result())
+
+def print_bar(future, vals):
+    output = "{left} {date} - {time} {center} {workspaces} {right} {cpu_usage}{pad}{ram_usage}{pad}{net_transfer}{pad}{ip_addr}{pad}{pad}{updates}{pad}{f_clear}"
+    vals.update(future.result())
+    print(output.format(**vals))
+    try:
+        sys.stdout.flush()
+    except BrokenPipeError:
+        loop.stop()
+
+loop = asyncio.get_event_loop()
 loop.run_forever()
