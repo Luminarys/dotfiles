@@ -103,6 +103,8 @@ def get_power():
     power = psutil.sensors_battery()
     if not power:
         return ""
+    elif power.power_plugged:
+        return "\uf1e6 {0:.1f}%".format(power.percent)
     elif power.percent >= 95.0:
         return "\uf240"
     elif power.percent > 75.0:

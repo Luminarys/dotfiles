@@ -30,7 +30,6 @@ call plug#end()
 syntax enable
 
 let mapleader = "\<space>"
-
 map <leader>n :NERDTreeToggle<CR>
 map <leader>p :CtrlP<CR>
 map <leader>t :CtrlPTag<CR>
