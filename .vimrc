@@ -7,7 +7,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mileszs/ack.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'Shougo/deoplete.nvim'
 Plug 'elixir-lang/vim-elixir'
 Plug 'othree/yajs.vim'
 Plug 'mxw/vim-jsx'
@@ -42,10 +41,6 @@ map <leader>q :b#<CR>
 map <leader>u :UndotreeToggle<CR>
 nnoremap <Leader>a :Ack!<Space>
 
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-let g:phpcomplete_index_composer_command = 'composer'
 
 " inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
