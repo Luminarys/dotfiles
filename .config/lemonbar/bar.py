@@ -6,11 +6,13 @@ import asyncio
 import subprocess
 import copy
 import re
+import os.path
 
 import i3ipc
 import psutil
 
-interface = "enp0s31f6"
+interfaces = ["enp0s31f6", "wlp2s0"]
+interface = next(iface for iface in interfaces if os.path.exists("/sys/class/net/{}".format(iface)))
 
 def get_bytes(num, suffix='/s', lpad=3):
     for unit in ['Bit','KiB','MiB','GiB','TiB','PiB','EiB','ZiB']:
