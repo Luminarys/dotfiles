@@ -216,7 +216,7 @@ def set_val(future, vals):
     vals.update(future.result())
 
 def print_bar(future, vals):
-    output = "{left} {date} - {time} {center} {workspaces} {right} {cpu_usage}{pad}{ram_usage}{pad}{net_transfer}{pad}{ip_addr}{pad}{pad}{updates}{pad}{f_clear}"
+    output = "{left} {date} - {time} {center} {workspaces} {right} {cpu_usage}{pad}{ram_usage}{pad}{net_transfer}{pad}{ip_addr}{pad}{updates}{f_clear}"
     vals.update(future.result())
     print(output.format(**vals))
     try:
