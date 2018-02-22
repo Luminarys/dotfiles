@@ -1,0 +1,50 @@
+#!/bin/bash
+DEBUG=0
+mkvinfo "$1" > currentmkvinfo.info
+currentFontName=""
+currentFontDigit=1
+while read info; do
+    currentLine=`echo $info | sed 's/|//g' | sed 's/+//g'`
+    currentLineText=`echo $currentLine | sed 's/[0-9]//g'`
+    currentLineDigit=`echo $currentLine | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/://g'`
+    if [ "$DEBUG" -gt "1" ]
+    then
+        echo DEBUG: Current line text: \ $currentLineText
+        echo DEBUG: Current line digit: $currentLineDigit
+        
+    fi
+    
+    if [ "${currentLineText:0:13}" == "Track number:" ]
+    then
+        currentTracknumber=$currentLineDigit
+        if [ "$DEBUG" -gt "0" ]
+        then
+            echo DEBUG: Looking whether $currentTracknumber is ASS-Subtitle...
+        fi
+    fi
+    
+    if [ "$currentLineText" == "Attachments" ]
+    then
+        lookForFonts=1
+    fi
+    
+    if [ "${currentLineText:0:10}" == "File name:" ] && [ "$lookForFonts" == "1" ]
+    then
+        currentFontName=${currentLineText:11}
+        if [ "$DEBUG" -gt "0" ]
+        then
+            echo DEBUG: Font detected: $currentFontName in file $line
+            echo DEBUG: Extracting font and moving it to ~/.fonts/
+        fi
+        if [ -e "$HOME/.fonts/$currentFontName" ]
+        then
+            echo "Info: $currentFontName already exists, skipping"
+        else
+            mkvextract attachments "$1" $currentFontDigit:"$HOME/.fonts/$currentFontName"
+        fi
+        let currentFontDigit=$currentFontDigit+1
+    fi
+done < currentmkvinfo.info		
+rm currentmkvinfo.info
+let count=$count+1
+#echo `tail -n1 substream.str` | sed 's/ /\n/g' >> substreamtmp.str

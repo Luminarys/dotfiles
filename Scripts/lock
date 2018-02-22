@@ -1,0 +1,17 @@
+#!/bin/python
+import configparser
+import os
+import subprocess
+from screeninfo import get_monitors
+
+cfg = configparser.ConfigParser()
+xdg_path = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.path.expanduser('~'), '.config'))
+cfg.read(os.path.join(xdg_path, 'nitrogen/bg-saved.cfg'))
+cmd = "convert"
+output = "/tmp/o.png"
+if not os.path.isfile(output):
+    params = ""
+    for (sec, monitor) in zip(sorted(cfg.sections()), get_monitors()):
+        params += "-page +{}+{} {} ".format(monitor.x, monitor.y, cfg[sec]['file'])
+    subprocess.call("{} {} -layers merge {}".format(cmd, params, output), shell=True)
+subprocess.call(["i3lock",  "-i",  output])
