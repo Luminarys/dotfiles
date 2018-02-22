@@ -100,17 +100,19 @@ def get_langs():
         return "%{A:ibus engine xkb\:us\:\:eng:}JP%{A}"
 
 def get_power():
-    with open("/sys/class/power_supply/BAT1/charge_now") as fin:
-        current_power = int(fin.readline())
-    with open("/sys/class/power_supply/BAT1/charge_full") as fin:
-        total_power = int(fin.readline())
-    percent = 100 * current_power/total_power
-    if percent == 100:
-        return "\uf114"
-    elif percent > 25:
-        return "\uf116 {0:.1f}%".format(percent)
+    power = psutil.sensors_battery()
+    if not power:
+        return ""
+    elif power.percent >= 95.0:
+        return "\uf240"
+    elif power.percent > 75.0:
+        return "\uf241 {0:.1f}%".format(power.percent)
+    elif power.percent > 50.0:
+        return "\uf242 {0:.1f}%".format(power.percent)
+    elif power.percent > 25.0:
+        return "\uf243 {0:.1f}%".format(power.percent)
     else:
-        return "\uf113 {0:.1f}%".format(percent)
+        return "\uf244 {0:.1f}%".format(power.percent)
 
 vals = {
     "left": "%{l}",
@@ -192,6 +194,11 @@ def async_cpu_usage(future, vals):
     future.set_result({"cpu_usage": get_cpu_usage()})
     return []
 
+@async_module(30, [])
+def async_power(future, vals):
+    future.set_result({"power": get_power()})
+    return []
+
 @async_module(5, [])
 def async_ram_usage(future, vals):
     future.set_result({"ram_usage": get_ram_usage()})
@@ -216,7 +223,7 @@ def set_val(future, vals):
     vals.update(future.result())
 
 def print_bar(future, vals):
-    output = "{left} {date} - {time} {center} {workspaces} {right} {cpu_usage}{pad}{ram_usage}{pad}{net_transfer}{pad}{ip_addr}{pad}{updates}{f_clear}"
+    output = "{left} {date} - {time} {center} {workspaces} {right} {power}{pad}{cpu_usage}{pad}{ram_usage}{pad}{net_transfer}{pad}{ip_addr}{pad}{updates}{f_clear}"
     vals.update(future.result())
     print(output.format(**vals))
     try:
