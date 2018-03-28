@@ -83,14 +83,8 @@ set statusline+=%*
 " au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
 
-" The Silver Searcher
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-  let g:ag_working_path_mode="r"
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+if executable('rg')
+  let g:ctrlp_user_command = 'rg -l --color never "" %s'
 endif
 let g:jsx_ext_required = 0
 
