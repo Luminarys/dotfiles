@@ -24,6 +24,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'majutsushi/tagbar'
+Plug 'tikhomirov/vim-glsl'
 
 call plug#end()
 
@@ -88,19 +89,19 @@ if executable('rg')
 endif
 let g:jsx_ext_required = 0
 
- let g:tagbar_type_rust = {
-    \ 'ctagstype' : 'rust',
-    \ 'kinds' : [
-        \'T:types,type definitions',
-        \'f:functions,function definitions',
-        \'g:enum,enumeration names',
-        \'s:structure names',
-        \'m:modules,module names',
-        \'c:consts,static constants',
-        \'t:traits',
-        \'i:impls,trait implementations',
-    \]
-    \}
+"" let g:tagbar_type_rust = {
+""    \ 'ctagstype' : 'rust',
+""    \ 'kinds' : [
+""        \'T:types,type definitions',
+""        \'f:functions,function definitions',
+""        \'g:enum,enumeration names',
+""        \'s:structure names',
+""        \'m:modules,module names',
+""        \'c:consts,static constants',
+""        \'t:traits',
+""        \'i:impls,trait implementations',
+""    \]
+""    \}
 
 let g:localvimrc_persistent = 1
 

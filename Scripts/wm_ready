@@ -1,8 +1,7 @@
-xrandr --output DisplayPort-1 --primary
-xrandr --output DisplayPort-0 --left-of DisplayPort-1
-xrandr --output HDMI-A-1 --above DisplayPort-1
-# DISPLAY=:0.0 feh --bg-center ~/Pictures/Wallpaper/current.png
+#!/bin/bash
+xrandr --output DisplayPort-0 --primary
+xrandr --output HDMI-A-1 --right-of DisplayPort-0 --rotate right
 nitrogen --restore
-killall lemonbar
 mpd
-smbar &
+polybar left &
+polybar right &

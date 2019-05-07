@@ -7,16 +7,7 @@
         -f "FontAwesome:size=12" \
         -F "#FFFFFFFF" \
         -B "#882F343F" \
-        -g 1920x20 | zsh &
-
-~/.config/lemonbar/bar.py DisplayPort-1 \
-    | lemonbar \
-        -a 20 \
-        -f "Inconsolata:size=13" \
-        -f "FontAwesome:size=12" \
-        -F "#FFFFFFFF" \
-        -B "#882F343F" \
-        -g 2560x20+1920+1100 | zsh &
+        -g 2560x20 | zsh &
 
 ~/.config/lemonbar/bar.py HDMI-A-1 \
     | lemonbar \
@@ -25,6 +16,6 @@
         -f "FontAwesome:size=12" \
         -F "#FFFFFFFF" \
         -B "#882F343F" \
-        -g 1920x20+1920 | zsh
+        -g 1080+2560+1100 | zsh
 
 wait
