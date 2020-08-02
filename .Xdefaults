@@ -1,61 +1,45 @@
-! general
-*.background: #212121
-*.foreground: #c0b18b
-*.cursorColor:#c0b18b
-*.colorBD:    #c0b18b
-*.colorUL:    #c0b18b
-*.colorIT:    #c0b18b
+! special
+*.foreground:   #c0b18b
+*.background:   #212121
+*.cursorColor:  #c0b18b
 
 ! black
-#*.color0:  #4a3637
-*.color0:  #1f1f1f
+*.color0:       #1f1f1f
+*.color8:       #4d4d4d
 
 ! red
-*.color1:  #ff105b
-#*.color1:  #B34800
-#*.color9:  #ac5d2f
-*.color9:  #ff87ad
-#*.color9:  #B34800
+*.color1:       #ed0f55
+*.color9:       #ffc4d7
 
 ! green
-# *.color2:  #7b8748
-*.color2: #5BFF10
-#*.color10: #647035
-*.color10:  #adff87
+*.color2:       #5bff10
+*.color10:      #adff87
 
 ! yellow
-#*.color3:  #af865a
-*.color3:  #d9c964
-#*.color11: #8f6840
-*.color11: #d9cf8f
+*.color3:       #d9c964
+*.color11:      #d9cf8f
 
 ! blue
-*.color12:  #4c96ee
-#*.color12: #444b4b
-*.color4:   #006ae7
-#*.color12: #006bb3
-
+*.color4:       #006ae7
+*.color12:      #4c96ee
 
 ! magenta
-#*.color5:  #775759
-*.color5:  #db8bfe
-#*.color13: #614445
-*.color13: #cfbbe8
+*.color5:       #bc24fe
+*.color13:      #cfbbe8
 
 ! cyan
-*.color6:   #069dfc
-*.color14:  #84fffe
+*.color6:       #069dfc
+*.color14:      #84fffe
 
 ! white
-#*.color7:  #c0b18b
-*.color7:  #989898
-*.color15: #978965
-#*.color15: #c5c5c5
+*.color7:       #989898
+*.color15:      #978965
 
 ! urxvt
 URxvt*cursorBlink: 		true
 #URxvt*font:				-*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
-urxvt*font:             xft:Inconsolata:size=16:antialias=true:hinting=true,xft:IPAPMincho,IPA P明朝:antialias-true,xft:Symbola:size=16
+urxvt*font:             xft:Source Code Pro:size=15:antialias=true:hinting=true,xft:IPAPMincho,IPA P明朝:antialias-true,xft:Symbola:size=15
+# urxvt*font:             xft:Inconsolata:style=light:size=16:antialias=true:hinting=true
 URxvt*scrollBar: 		false
 URxvt.perl-ext-common: default,clipboard
 xvt.iso14755: False

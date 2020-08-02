@@ -25,6 +25,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'majutsushi/tagbar'
 Plug 'tikhomirov/vim-glsl'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
